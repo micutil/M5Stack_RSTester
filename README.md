@@ -37,7 +37,7 @@ M5Burner_MicというプログラムでSD-MenuをM5Stackにインストールし
 8. M5StackのCボタン（右）を何回か押して、RSTesterを選択し、Bボタン（中央）のボタンを押すと、RSTesterが起動します。
 9. 再度、メニューを表示する場合は、Aボタン（左）を押しながらリセットボタン（左上側面）を押すとSD-Menuが起動します。
 
-# 接続
+## 接続
 M5Stackとサーボをジャンパーワイヤなどでつなぎます。
 
 	M5Stack		RS304系サーボ（写真の場合上から）
@@ -45,25 +45,28 @@ M5Stackとサーボをジャンパーワイヤなどでつなぎます。
 	5V		…	パワー
 	GND		…	グランド
 
-写真のようなコネクターを作る場合は、ROBOMICのブログ
+1. 写真のようなコネクターを作る場合は、ROBOMICのブログ
 http://micono.cocolog-nifty.com/blog/2013/04/rs308md-f205.html
 を参考にして下さい。
+
+2. M5Stack RSTesterアンダプターについて
+
 
 注意：複数のサーボがつながっている場合、パソコンからのUSBでは電流不足になる場合があるので、モバイルバッテリーをM5Stackにつなげて行ってください。
 
 
 
-# RSTesterを起動
-LovyanLauncherを起動、SD-UploaderからRSTesterを選択して起動させて下さい。
+## RSTesterの簡単な操作方法
+1. TobozoLauncher, LovyanLauncherなどで、RSTesterを起動します。
+2. A: 動作テスト、B: ID変更、C: 各種設定（の表示と変更）の機能があります。
 
-まだ入れてない方は以下の手順でLovyanLauncherを入れて下さい。
-https://m5stack.com/download にアクセス
-M5Burnerをダウンロード
-M5Burnerを起動させて、LovyanLauncherを選択してインストール
-https://github.com/lovyan03/M5Stack_LovyanLauncher/tree/master/LovyanLauncher にアクセス
-LovyanLauncher.ino.m5stack_core_esp32.binをダウンロードして、ファイル名をmenu.binに変えて、microSDに入れる
+### A: 動作テスト
 
-# 設定変更
+### B: ID変更
+
+### C: 各種設定
+
+## 設定変更
 コンプライアンスマージン、コンプライアンススロープ、パンチ、サーボのIDの順で設定していきます。MSPChangerが起動し、両端のボタンで設定値を変えて、真ん中のOKボタンを押すと、次、次と、設定項目が変更していきます。
 IDは255を選ぶと、全てのサーボが対象になりますので、複数のサーボがつながっているサーボすべて同じ値に変更する時や、サーボのIDがわからない場合は、255を選ぶといいでしょう。
 
