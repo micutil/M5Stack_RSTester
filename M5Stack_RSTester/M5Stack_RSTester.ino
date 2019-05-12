@@ -1,6 +1,7 @@
 /*************************************************
  * M5Stack RSTester
  * 
+ * ver 1.0.1 (2019/05/12) ODROID-GO対応/FACES対応
  * ver 1.0.0 (2019/04/07)
  * 
  * This application is M5Stack version of RSTester.
@@ -8,6 +9,9 @@
  * We can chenage servo ID, panch et, al., settings, 
  * and, get information of these settings.
  * 
+ * build for Odroid-go
+ * Replace library of M5Stack to
+ * https://github.com/tobozo/ESP32-Chimera-Core
  * 
  * LISENCE
  *  CC 4.0 BY-NC-ND Micono Utilities (Michio Ono)
@@ -21,6 +25,16 @@
 #include "M5StackUpdater.h" //for SD updater
 
 #include "RS30x.h"
+
+bool startkey = false;
+#ifndef ARDUINO_ODROID_ESP32
+  #define useFACES
+  //For Faces
+  #ifdef useFACES
+    #define KEYBOARD_I2C_ADDR     0x08
+    #define KEYBOARD_INT          5
+  #endif
+#endif
 
 #define useJPFont
 #ifdef useJPFont
@@ -116,18 +130,25 @@ void drawButtonName() {
   SDfonts.open(); // フォントのオープン
   switch (btnType) {
     case btnABC:
+      #ifdef ARDUINO_ODROID_ESP32
+      fontDump(70, smpY, "(C)rossキー", fntsz, TFT_WHITE, false);
+      //fontDumpCenter(70, smpY, "(C)rossキー", 9, fntsz, TFT_WHITE, false);
+      //fontDumpCenter(160, smpY, "B", 1, fntsz, TFT_WHITE, false);
+      //fontDumpCenter(250, smpY, "A", 1, fntsz, TFT_WHITE, false);
+      #else
       fontDumpCenter(70, smpY, "A", 1, fntsz, TFT_WHITE, false);
       fontDumpCenter(160, smpY, "B", 1, fntsz, TFT_WHITE, false);
       fontDumpCenter(250, smpY, "C", 1, fntsz, TFT_WHITE, false);
+      #endif
       break;
     case btnDwnOKUp:
       fontDumpCenter(70, smpY, "↓", 2, fntsz, TFT_WHITE, false);
-      fontDumpCenter(160, smpY, "ＯＫ", 2, fntsz, TFT_GREEN, false);
+      fontDumpCenter(160, smpY, "ＯＫ(B)", 5, fntsz, TFT_GREEN, false);
       fontDumpCenter(260, smpY, "↑", 2, fntsz, TFT_WHITE, false);
       break;
     case btnDwnSelRight:
       fontDumpCenter(70, smpY, "↓", 2, fntsz, TFT_WHITE, false);
-      fontDumpCenter(160, smpY, "選択", 2, fntsz, TFT_GREEN, false);
+      fontDumpCenter(160, smpY, "選択(B)", 5, fntsz, TFT_GREEN, false);
       fontDumpCenter(260, smpY, "→", 2, fntsz, TFT_WHITE, false);
       break;
     case btnDwnNonRight:
@@ -137,7 +158,7 @@ void drawButtonName() {
       break;
     case btnNonBckNon:
       fontDumpCenter(70, smpY, "", 2, fntsz, TFT_WHITE, false);
-      fontDumpCenter(160, smpY, "戻る", 2, fntsz, TFT_YELLOW, false);
+      fontDumpCenter(160, smpY, "戻る(B)", 5, fntsz, TFT_YELLOW, false);
       fontDumpCenter(260, smpY, "", 2, fntsz, TFT_WHITE, false);
       break;
     default:
@@ -437,7 +458,7 @@ void drawTitleName() {
   SDfonts.open(); // フォントのオープン
   fontDump(20, 5, "RSTester", 24, TFT_YELLOW, false);
   fontDump(20, 30, "RS30x系サーボ設定表示・変更", 16, TFT_WHITE, false);
-  fontDump(20, 47, "by Micono v1.0.0", 12, TFT_GREEN, false); 
+  fontDump(20, 47, "by Micono v1.0.1", 12, TFT_GREEN, false); 
   SDfonts.close(); // フォントのクローズ
   
 }
@@ -672,8 +693,16 @@ void setup() {
     ESP.restart();
   }
   
-  Serial.begin(115200);
+  //Serial.begin(115200);
+  #ifdef ARDUINO_ODROID_ESP32
+  //#1 GND
+  //14 IO12 EXT-Pin #3 : EMAC_TXD3
+  //23 IO15 EXT-Pin #4                            : EMAC_RXD3
+  //#10 POWER
+  Serial2.begin(115200, SERIAL_8N1, 15, 12);
+  #else
   Serial2.begin(115200, SERIAL_8N1, 16, 17);
+  #endif
   delay(500);
 
   M5.Lcd.setTextSize(2);
@@ -690,6 +719,12 @@ void setup() {
   //情報リスト初期化
   initInfoList();
 
+  //For Faces
+  #ifdef useFACES
+  Wire.begin();
+  pinMode(KEYBOARD_INT, INPUT_PULLUP);
+  Serial.println("Faces: Enabled");//M5.Lcd.println("Faces: Enabled");
+  #endif
   //M5.Speaker.beep();
 }
 
@@ -701,33 +736,93 @@ unsigned long noOpr=millis();
 unsigned long initPress=0;//millis();
 bool enableLongPress=false;
 
+//#ifdef ARDUINO_ODROID_ESP32
+int joyXisPressed=0;
+int joyYisPressed=0;
+int joyXwasPressed=0;
+int joyYwasPressed=0;
+//#endif
+int crsXdir=1;
+int crsYdir=1;
+int selBtn=-1;
+
+void crossButtonDirection() {
+  if(joyXisPressed==2) crsXdir=-1;//left
+  if(joyYisPressed==2) crsYdir=-1;//Up
+}
+
 void loop() {
   // put your main code here, to run repeatedly:
   M5.update();
 
+  //#ifdef ARDUINO_ODROID_ESP32
+  joyXisPressed=0;//C button
+  joyYisPressed=0;//A button
+  crsXdir=1;//Direction
+  crsYdir=1;//Direction
+  //#endif
+
   if(working>0) {
     noOpr=millis();
   } else {
-    int selBtn=-1;
+    selBtn=-1;
     if(enableLongPress) {
       if(initPress==0) initPress=millis();
       else if(millis()>initPress+500) {
+        #ifdef ARDUINO_ODROID_ESP32
+        joyXisPressed=M5.JOY_X.isAxisPressed();
+        joyYisPressed=M5.JOY_Y.isAxisPressed();
+        if(joyYisPressed>0) selBtn=0;
+        if(joyXisPressed>0) selBtn=2;
+        #else
         if(M5.BtnA.isPressed()) selBtn=0;
         if(M5.BtnC.isPressed()) selBtn=2;
+        #endif
       }
     }
+    #ifdef ARDUINO_ODROID_ESP32
+    //Start button
+    if(M5.BtnStart.wasPressed()) {
+      returnToTop();
+      return;
+    }
+    #endif
+    #ifdef ARDUINO_ODROID_ESP32
+    joyYwasPressed=M5.JOY_Y.wasAxisPressed();
+    if(joyYwasPressed>0||M5.BtnA.wasPressed()) {
+      joyYisPressed=joyYwasPressed;
+    #else
     if(M5.BtnA.wasPressed()) {
+    #endif
       selBtn=0;initPress=0;
     }
     if(M5.BtnB.wasPressed()) {
       selBtn=1;initPress=0;
     }
+    #ifdef ARDUINO_ODROID_ESP32
+    joyXwasPressed=M5.JOY_X.wasAxisPressed();
+    if(joyXwasPressed>0||M5.BtnC.wasPressed()) {
+      joyXisPressed=joyXwasPressed;
+    #else
     if(M5.BtnC.wasPressed()) {
+    #endif
       selBtn=2;initPress=0;
     }
+
+    #ifdef useFACES
+    if (digitalRead(KEYBOARD_INT) == LOW) {
+      Wire.requestFrom(KEYBOARD_I2C_ADDR, 1);  // request 1 byte from keyboard
+      while (Wire.available()) {
+        doFacesKey(Wire.read()); // receive a byte as character
+      }
+    }
+    #endif //useFaces
     
     if(selBtn>-1) {
       noOpr=millis();
+      #ifdef ARDUINO_ODROID_ESP32
+      crossButtonDirection();
+      #endif
       switch(viewType) {
         case viewMain:
           changeView(selBtn);
@@ -740,12 +835,15 @@ void loop() {
           }
           break;
       }
-    } else {
-      if (600000<millis()-noOpr) {
+    }
+    #ifndef ARDUINO_ODROID_ESP32
+    else {
+      if (300000<millis()-noOpr) {
         Serial.println( "Power OFF" );
         M5.powerOFF();
       }      
     }
+    #endif
   }
   
   delay(1);
@@ -769,7 +867,7 @@ void doBtnAC(int n) {
     case viewMove:
       switch(stepmode) {
         case selID:
-          targetID=targetID-n;
+          targetID=targetID-n*crsXdir*crsYdir;
           if(targetID>servoNum) {
             targetID=0;
           } else if(targetID<0) {
@@ -778,7 +876,7 @@ void doBtnAC(int n) {
           drawIDValue();
           break;
         case selAgl:
-          targetAgl=targetAgl-n;
+          targetAgl=targetAgl-n*crsXdir*crsYdir;
           if(targetAgl>angleNum) {
             targetAgl=0;
           } else if(targetAgl<0) {
@@ -792,7 +890,7 @@ void doBtnAC(int n) {
     case viewChgID:
       switch(stepmode) {
         case selID:
-          targetID=targetID-n;
+          targetID=targetID-n*crsXdir*crsYdir;
           if(targetID>servoNum) {
             targetID=0;
           } else if(targetID<0) {
@@ -801,7 +899,7 @@ void doBtnAC(int n) {
           drawIDValue();
           break;
         case selToID:
-          changeToID=changeToID-n;
+          changeToID=changeToID-n*crsXdir*crsYdir;
           if(changeToID==40) {
             changeToID=255;
           } else if(changeToID==254) {
@@ -820,7 +918,7 @@ void doBtnAC(int n) {
       int x=lstX,y=lstY;
       switch(stepmode) {
         case selID:
-          targetID=targetID-n;
+          targetID=targetID-n*crsXdir*crsYdir;
           if(targetID>servoNum) {
             targetID=0;
           } else if(targetID<0) {
@@ -830,11 +928,11 @@ void doBtnAC(int n) {
           break;
         case selSet:
           if(n>0) {
-            y=lstY+1;
+            y=lstY+1*crsYdir;
             if(y>=7) y=0;
             if(y<0) y=6;
           } else {
-            x=lstX+1;
+            x=lstX+1*crsXdir;
             if(x>=3) x=0;
             if(x<0) x=2;
           }
@@ -842,7 +940,7 @@ void doBtnAC(int n) {
           break;
         case selValue:
           if(ilt[x][y].type==0) return;
-          ilt[x][y].value-=n;
+          ilt[x][y].value-=n*crsXdir*crsYdir;
           if(ilt[x][y].value<ilt[x][y].minv) ilt[x][y].value=ilt[x][y].maxv;
           if(ilt[x][y].value>ilt[x][y].maxv) ilt[x][y].value=ilt[x][y].minv;
           drawChgSetValue();
@@ -948,3 +1046,86 @@ void doBtnB() {
 
   }
 }
+
+#ifndef ARDUINO_ODROID_ESP32
+#ifdef useFACES
+
+void doFacesKey(int key_val) {
+  Serial.println(key_val);
+  if (key_val != 0) {
+    if (key_val >= 0x30 && key_val <= 0x39) {
+      /*
+      if (startkey) {
+        voiceID = (voiceID + 1) * 10 + key_val - 0x30 - 1;
+      } else {
+        startkey = true;
+        voiceID = key_val - 0x30 - 1;
+      }
+      checkVoiceID();
+      drawListVoiceID();
+      return;
+      */
+    } else {
+      doTenKey(key_val);
+      return;
+    }
+  }
+}
+
+void doTenKey(int key_val) {
+  switch (key_val) {
+    case 239://A
+      selBtn=0;initPress=0;
+      break;
+      
+    case 223://B
+      selBtn=1;initPress=0;
+      break;
+
+    case 253://Down
+      joyYisPressed=1;
+      selBtn=0;initPress=0;
+      break;
+
+    case 254://Up
+      joyYisPressed=2;
+      selBtn=0;initPress=0;
+      break;
+
+    case 247://Right
+      joyXisPressed=1;
+      selBtn=2;initPress=0;
+      break;
+
+    case 251://Left
+      joyXisPressed=2;
+      selBtn=2;initPress=0;
+      break;
+
+    case 127://Start
+      returnToTop();
+      break;
+
+    /*
+    case 191://Select
+      break;
+    case '=':
+      break;
+    case '+':
+      break;
+    case '-':
+      break;
+    case '*':
+      break;
+    case '/':
+      break;
+    default:
+      break;
+    */
+  }
+
+  //startkey = false;
+}
+
+#endif //useFACES
+#endif //ARDUINO_ODROID_ESP32
