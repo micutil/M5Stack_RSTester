@@ -4,12 +4,24 @@ RSTesterは、双葉電子工業さんのRS304系のサーボの動作テスト�
 どのようなプログラムなのかは、以下の像をクリックすると操作中の動画をで観ることができます。<br>
 [![preview](images/preview01s.jpg)](https://www.youtube.com/watch?v=g7JMcP97mWo)
 
+## 更新
+- M5StackのFacesに対応しました。
+- Odroid-GOに対応しました。
+
+####更新方法(M5Stack版）
+- RSTester.binをmicroSDにコピーし、メニューアプリで再起動してください。
+
+#### Odroid-GO 用のプログラムをビルドをしたい場合
+
+- tobozoさんの、[M5Stackのキメラライブラリー](https://github.com/tobozo/ESP32-Chimera-Core)をダウンロードして、Arduinoフォルダのlibraryフォルダの中のM5Stackの中と入れ替えることで、Odroid-GOのプログラムをボタンの違い以外ほぼ気にすることなるビルドできます。
+
+<IMG SRC=images/facesodroid.jpg width="600">
+
 
 ## インストール
-「Clone or download」（緑色のボタン）でDownload ZIPを選び、ダウンロードし、zipを解凍します。
 
-### ① M5StackのmicroSDに入れるもの
-1. 同梱のファイルの中にmicroSDフォルダがあります、その中のファイルやフォルダをmicroSDにコピーをして下さい。ちなみに、**RSTester.bin**というファイルがRSTesterのプログラムになります。jpgやjsonのフォルダに入っているファイルはメニュプログラムが使うデータです。もし、microSDの中に、既にjpgフォルダや、jsonフォルダがある場合は、それぞれの中に入っているファイルをコピーするようにして下さい。またバージョンのファイルで置き換えてしまわない様にコピーする際は、修正日を比べてコピーする様にして下さい。
+### ① M5Stack / Odroid-GO のmicroSDに入れるもの
+1. 同梱のファイルの中にmicroSDフォルダの中に、M5StackフォルダとOdroid-GOフォルダがあります。お持ちのデバイスの方の方のフォルダ内のファイルやフォルダをmicroSDにコピーをして下さい。ちなみに、**RSTester.bin**というファイルがRSTesterのプログラムになります。jpgやjsonのフォルダに入っているファイルはメニュプログラムが使うデータです。もし、コピー先のmicroSDの中に、既にjpgフォルダや、jsonフォルダがある場合は、コピー先のjpgフォルダや、jsonフォルダ内のファイルを消してしまわないように注意してください。
 2. 次に、RSTesterが使っている**フォント**（**FONT.BIN**, **FONTLCD.BIN**)が必要になります。これらのファイツをまだ入れてない場合は、ブラウザで、[Tamakichi/Arduino-KanjiFont-Library-SD](https://git.io/fjYst)を開いて下さい。
 3. 「**Clone or download**」でD**ownload ZIP**を選び、ダウンロードし、zipを解凍します。
 4. そのファイルの中に、fontbinフォルダがあり、中に、**FONT.BIN**, **FONTLCD.BIN**というファイルがあるので、これら２つのファイルをmicroSDにコピーします。
@@ -47,8 +59,17 @@ M5Stackとサーボをジャンパーワイヤなどでつなぎます。
 
 	M5Stack		RS304系サーボ（写真の場合上から）
 	T2		…	シグナル
+	R2		…	（半２重を使っている場合）
 	5V		…	パワー
 	GND		…	グランド
+
+Odroid-GOとサーボをジャンパーワイヤなどでつなぎます。
+
+	Odroid-GO		RS304系サーボ
+	#1 GND		…	グランド
+	#3 RX3		…	（半２重を使っている場合）
+	#4 TX3		…	シグナル
+	#10	5V		…	パワー
 
 1. 写真のようなコネクターを作る場合は、ROBOMICのブログの[「週刊 ロビ」 RS308MD 基板側端子の入手とコネクター作成例](http://micono.cocolog-nifty.com/blog/2013/04/rs308md-f205.html)
 を参考にして下さい。**ただし、この場合はサーボの情報の取得はできません。**<br>
@@ -70,7 +91,7 @@ M5Stackとサーボをジャンパーワイヤなどでつなぎます。
 		黒	…	BASIC,GRAY				RS303SR,RS304MD, ロボゼロ, ロビ１、ロビ２
 		赤	…	BASIC,GRAY,FIRE,M5GO	ロビ１、ロビ２
 
-<IMG SRC=images/m5sadptr.jpg width="300">
+<IMG SRC=images/m5sadptr.jpg height ="380"><IMG SRC=images/odroidconnect.jpg height="380">
 
 回路図：
 
@@ -165,6 +186,9 @@ M5Stackとサーボをジャンパーワイヤなどでつなぎます。
 8. 同様に、右反発をを選んで6に、左反発を選んで6に、パンチを選んで12にします。
 9. パンチの設定変更が最後なので、6の操作に相当するところで、Bボタンでなく、Cボタンを押すことにより、変更して、保存（ROMに書き込んで）する操作を行って下さい。もしBボタンで、一覧に戻った場合は、一覧の右下の「保存して戻る」を選んでトップ画面に戻って下さい。
 
+## 履歴
+	ver 1.1: 2019/ 5/12 ODROID-GO対応/FACES対応
+	ver 1.0: 2019/ 4/ 7
 
 ## ライセンス
 CC 4.0 BY-NC-ND https://github.com/micutil/M5Stack_RSTester
