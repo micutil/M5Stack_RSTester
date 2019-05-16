@@ -1,6 +1,7 @@
 /*************************************************
  * M5Stack RSTester
  * 
+ * ver 1.0.2 (2019/05/17) Deep Sleep 対応 / M5Stack 0.27, ESP32 1.02でビルド
  * ver 1.0.1 (2019/05/12) ODROID-GO対応/FACES対応
  * ver 1.0.0 (2019/04/07)
  * 
@@ -836,14 +837,21 @@ void loop() {
           break;
       }
     }
-    #ifndef ARDUINO_ODROID_ESP32
+    //#ifndef ARDUINO_ODROID_ESP32
     else {
       if (300000<millis()-noOpr) {
+        /*
         Serial.println( "Power OFF" );
         M5.powerOFF();
+        */
+        Serial.println( "Sleep..." );
+        M5.Lcd.setBrightness(0);
+        M5.Lcd.sleep();
+        esp_sleep_enable_ext0_wakeup((gpio_num_t)BUTTON_B_PIN, LOW);
+        esp_deep_sleep_start();
       }      
     }
-    #endif
+    //#endif
   }
   
   delay(1);
