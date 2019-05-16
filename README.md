@@ -1,12 +1,13 @@
-# M5Stack_RSTester
+#ESP32 RSTester (v1.2)
 RSTesterは、双葉電子工業さんのRS304系のサーボの動作テスト、ID変更および、各種設定の表示や変更を行う為の、M5Stackのプログラムおよび、RS304系のサーボを接続するためのアダプターです。
 
 どのようなプログラムなのかは、以下の像をクリックすると操作中の動画をで観ることができます。<br>
 [![preview](images/preview01s.jpg)](https://www.youtube.com/watch?v=g7JMcP97mWo)
 
 ## 更新
-- M5StackのFacesに対応しました。
-- Odroid-GOに対応しました。
+- スリープ対応 (v1.2)
+- M5StackのFacesに対応しました (v1.1)
+- Odroid-GOに対応しました (v1.1)
 
 ####更新方法(M5Stack版）
 - RSTester.binをmicroSDにコピーし、メニューアプリで再起動してください。
@@ -47,11 +48,11 @@ M5Stackをコンピュータと繋いで、プログラムの転送など通信�
 4. USBシリアルポートをM5Stackのポートに設定します。
  - Macの場合はポートに名前がつくので「**SLAB_USBtoUART**」という名前のポートを選んで下さい。
  - Windowsの場合は、**COM3**とか、COM4とかの名前になっています。ひとつしか表示されてなかったら、それがM5Stackのポートでしょう。もしいくつか表示されているようだったら、コントロールパネルから、デバイスマネージャーのポートをみて番号を確認して下さい。例えば以下の図の場合だと**COM4**であるということになります。<br>![ポート番号](images/portnum.jpg)
-5. 「Priset」のポップアップメニューで「**SD-Menu**」の最新版を選択します。
+5. 「Priset」のポップアップメニューでM5StackまたはOdroid-GO用の「**SD-Menu**」の最新版を選択します。
 6. 「**Start**」ボタンをクリックすると、プログラムの転送が開始します。
 7. プログラムの転送が終わるとM5Stackがリセットされ、インストールした**SD-Menu**が起動します。
 8. M5StackのCボタン（右）を何回か押して、RSTesterを選択し、Bボタン（中央）のボタンを押すと、RSTesterが起動します。操作方法は後で説明します。
-9. microSDにmenu.binが入ってない場合は、M5Burner_Micのfirmwaresフォルダの中のtobozoフォルダの中に**menu.bin**があるので、それをmicroSDにコピーして下さい。
+9. microSDにmenu.binが入ってない場合は、M5Burner_Micのfirmwaresフォルダの中のtobozoフォルダの中にM5StackまたはOdroid-GOのフォルダがありその中に**menu.bin**があるので、それをmicroSDにコピーして下さい。
 9. 再度、メニューを表示する場合は、Aボタン（左）を押しながらリセットボタン（左上側面）を押すとSD-Menuが起動します。
 
 ## 接続
@@ -95,8 +96,7 @@ Odroid-GOとサーボをジャンパーワイヤなどでつなぎます。
 
 回路図：
 
-<IMG SRC=images/type1.png width="300">
-<IMG SRC=images/type2.png width="300">
+<IMG SRC=images/type1.png width="300"><IMG SRC=images/type2.png width="300">
 
 
 パーツ：
@@ -187,6 +187,7 @@ Odroid-GOとサーボをジャンパーワイヤなどでつなぎます。
 9. パンチの設定変更が最後なので、6の操作に相当するところで、Bボタンでなく、Cボタンを押すことにより、変更して、保存（ROMに書き込んで）する操作を行って下さい。もしBボタンで、一覧に戻った場合は、一覧の右下の「保存して戻る」を選んでトップ画面に戻って下さい。
 
 ## 履歴
+	ver 1.2: 2019/ 5/17 スリープ対応ほか
 	ver 1.1: 2019/ 5/12 ODROID-GO対応/FACES対応
 	ver 1.0: 2019/ 4/ 7
 
