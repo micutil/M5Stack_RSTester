@@ -80,7 +80,7 @@ Odroid-GOとサーボをジャンパーワイヤなどでつなぎます。
  - ＳＯＴ２３変換基板 [購入先例](http://akizukidenshi.com/catalog/g/gP-03660/)
  - 分割ロングピンソケット [購入先例](http://akizukidenshi.com/catalog/g/gC-05779/)
 
-		<IMG SRC=images/connector.jpg width="160">
+	<IMG SRC=images/connector.jpg width="160">
 
 2. **M5Stack RSTester専用アンダプターについて**
 	- サーボ情報を取得するためには半２重回路にしなくてはいけません。M5Stackに簡単に付けて使えるアダプタを設計しました。アダプターは２種類あり、黒いアダプタと赤いアダプタがあります（図）。
