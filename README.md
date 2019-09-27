@@ -14,7 +14,6 @@ RSTesterは、双葉電子工業さんのRS304系のサーボの動作テスト�
 
 ##### バイナリー
 - in M5_Gamebin ... 4M minimal SPIFFS partition scheme
-- in MD_Gamebin ... 4M default partition scheme
 - in MF_Gamebin ... Fire defaut partition scheme
 - in OG_Gamebin ... Arduino program for Odroid-GO
 - in odroid/firmwares ... fw file for Odroid-GO
