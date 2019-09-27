@@ -9,8 +9,16 @@ RSTesterは、双葉電子工業さんのRS304系のサーボの動作テスト�
 - M5StackのFacesに対応しました (v1.1)
 - Odroid-GOに対応しました (v1.1)
 
-####更新方法(M5Stack版）
+#### 更新方法(M5Stack版）
 - RSTester.binをmicroSDにコピーし、メニューアプリで再起動してください。
+
+##### バイナリー
+- in M5_Gamebin ... 4M minimal SPIFFS partition scheme
+- in MD_Gamebin ... 4M default partition scheme
+- in MF_Gamebin ... Fire defaut partition scheme
+- in OG_Gamebin ... Arduino program for Odroid-GO
+- in odroid/firmwares ... fw file for Odroid-GO
+
 
 #### Odroid-GO 用のプログラムをビルドをしたい場合
 
