@@ -1,6 +1,10 @@
 #RSTester (v1.2)
 RSTesterは、双葉電子工業さんのRS304系のサーボの動作テスト、ID変更および、各種設定の表示や変更を行う為の、M5Stackのプログラムおよび、RS304系のサーボを接続するためのアダプターです。
 
+[LovyanLauncher](https://github.com/lovyan03/M5Stack_LovyanLauncher)に対応していて、microSDからの起動には[LovyanLauncher](https://github.com/lovyan03/M5Stack_LovyanLauncher)もインストールされている必要があります。
+
+**注意：Odroid-GOメニューを使う場合（初期状態の場合）は[LovyanLauncher](https://github.com/lovyan03/M5Stack_LovyanLauncher)のインストールは必要はありません。microSDには[Skeleton file](https://wiki.odroid.com/odroid_go/make_sd_card)を使います。**
+
 どのようなプログラムなのかは、以下の像をクリックすると操作中の動画をで観ることができます。<br>
 [![preview](images/preview01s.jpg)](https://www.youtube.com/watch?v=g7JMcP97mWo)
 
@@ -8,16 +12,6 @@ RSTesterは、双葉電子工業さんのRS304系のサーボの動作テスト�
 - スリープ対応 (v1.2)
 - M5StackのFacesに対応しました (v1.1)
 - Odroid-GOに対応しました (v1.1)
-
-#### 更新方法(M5Stack版）
-- RSTester.binをmicroSDにコピーし、メニューアプリで再起動してください。
-
-##### バイナリー
-- in M5_Gamebin ... 4M minimal SPIFFS partition scheme
-- in MF_Gamebin ... Fire defaut partition scheme
-- in OG_Gamebin ... Arduino program for Odroid-GO
-- in odroid/firmwares ... fw file for Odroid-GO
-
 
 #### Odroid-GO 用のプログラムをビルドをしたい場合
 
@@ -29,38 +23,65 @@ RSTesterは、双葉電子工業さんのRS304系のサーボの動作テスト�
 ## インストール
 
 ### ① M5Stack / Odroid-GO のmicroSDに入れるもの
-1. 同梱のファイルの中にmicroSDフォルダの中に、M5StackフォルダとOdroid-GOフォルダがあります。お持ちのデバイスの方の方のフォルダ内のファイルやフォルダをmicroSDにコピーをして下さい。ちなみに、**RSTester.bin**というファイルがRSTesterのプログラムになります。jpgやjsonのフォルダに入っているファイルはメニュプログラムが使うデータです。もし、コピー先のmicroSDの中に、既にjpgフォルダや、jsonフォルダがある場合は、コピー先のjpgフォルダや、jsonフォルダ内のファイルを消してしまわないように注意してください。
+Odroid-GOメニューを使う場合（初期状態の場合）は[Skeleton file](https://wiki.odroid.com/odroid_go/make_sd_card)を作成しておきます。
+
+1. 同梱のファイルの中にmicroSDフォルダの中のファイルを、microSDにコピーします。RSTester.binやRSTester.fwというファイルがプログラムになります。**コピー先のmicroSDの中に既にあるフォルダの中のファイルを消してしまわないように結合コピーを選ぶようにして下さい。**
 2. 次に、RSTesterが使っている**フォント**（**FONT.BIN**, **FONTLCD.BIN**)が必要になります。これらのファイツをまだ入れてない場合は、ブラウザで、[Tamakichi/Arduino-KanjiFont-Library-SD](https://git.io/fjYst)を開いて下さい。
 3. 「**Clone or download**」でD**ownload ZIP**を選び、ダウンロードし、zipを解凍します。
 4. そのファイルの中に、fontbinフォルダがあり、中に、**FONT.BIN**, **FONTLCD.BIN**というファイルがあるので、これら２つのファイルをmicroSDにコピーします。
 5. これでM5Stackに入れるmicroSDの作成は終了です。このmicroSDをM5Stackに入れて下さい。
 
+### ビルド済みファイル
+- in M5_Gamebin ... 4M minimal SPIFFS partition scheme.
+- in MF_Gamebin ... Fire defaut partition scheme.
+- in OG_Gamebin ... bin file for Odroid-GO.
+- in odroid/firmwares ... fw file for Odroid-GO Menu Control.
+
 
 ### ② USBドライバーをインストールする
 M5Stackをコンピュータと繋いで、プログラムの転送など通信するためには、Silicon LabsのUSBDriverをインストールする必要があります。もしまだインストールしてなければ
 [シリアル接続の確立方法](https://docs.m5stack.com/#/ja/related_documents/establish_serial_connection)
-のサイトを参考にしてインストールして下さい。
+のサイトを参考にしてインストールして下さい。**Odroid-GOメニューを使う場合は必ずしもドライバーのインストールをする必要はありません**
 
 > なお、Macの場合、インストールしただけではセキュリティが通ってないので、インストール後、環境設定のセキュリティとプライバシーの一般で、インストールしたドライバーの許可をして下さい。
 > 
 ![セキュリティ](images/kyoka.jpg)
 
 
-### ③ M5Burner_Micで、M5StackにSD-Menuをインストールする
-"M5Burner\_Mic"というプログラムでSD-MenuをM5Stackにインストールします。すでにSD-MenuまたはLovyanLauncherをインストールしてある場合はこのステップは必要ありません。
+### ③ M5Burner_Micで、LovyanLauncherをインストールする
+**Odroid-GOメニューを使う場合はこの操作を行ってはいけません!!!**
 
-1. [M5Burner_Mic](https://github.com/micutil/M5Burner_Mic) のページから「Download [here](http://micutil.com/download/M5Burner_Mic.zip)」の所でM5Burner\_Micをダウンロードし、解凍して下さい。M5Burner\_Micフォルダはお好みの場所に入れて下さい。
-2. M5Stackに付いてきたUSB-CケーブルでパソコンとM5Stackを繋げて下さい。
+"[M5Burner_Mic](https://github.com/micutil/M5Burner_Mic)"というプログラムで[LovyanLauncher](https://github.com/lovyan03/M5Stack_LovyanLauncher)をM5StackまたはOdroid-GOにインストールする方法を説明します。
+
+1. [M5Burner_Mic](https://github.com/micutil/M5Burner_Mic) のページから「Download [here](http://micutil.com/download/M5Burner_Mic.zip)」の所でM5Burner\_Micをダウンロードし、解凍して下さい。M5Burner\_Micフォルダはお好みの場所に入れて下さい（**フルパスに日本語名を含まない場所に置くのが無難です**）。
+2. M5Stackにインストールする場合：[LovyanLauncher firmware](https://github.com/lovyan03/LovyanLauncher-firmware)のページから「Clone or download」のボタンでダウンロードし解凍。LovyanLauncher-firmware-masterフォルダをM5Burner\_Micのフォルダの中にあるfirmwaresフォルダにコピーして下さい。
+3. Odroid-GOにインストールする場合：[Odroid-GO版のLovyanLauncher](https://github.com/lovyan03/M5Stack_LovyanLauncher/blob/master/LovyanLauncher/build_odroid_go/LovyanLauncher.bin)のページの「Download」ボタンをクリックするとダウンロードできます。ダウンロードしたLovyanLauncher.binは、M5Burner\_Mic起動後、M5Burner\_Micのウインドウに**ドラッグ＆ドロップ**して下さい。
+2. USBケーブルでパソコンとM5StackまたはOdroid-GOを繋げて下さい。
 3. M5Burner\_Micをダブルクリックして起動します。
-4. USBシリアルポートをM5Stackのポートに設定します。
+4. USBシリアルポートをM5StackまたはOdroid-GOのポートに設定します。
  - Macの場合はポートに名前がつくので「**SLAB_USBtoUART**」という名前のポートを選んで下さい。
  - Windowsの場合は、**COM3**とか、COM4とかの名前になっています。ひとつしか表示されてなかったら、それがM5Stackのポートでしょう。もしいくつか表示されているようだったら、コントロールパネルから、デバイスマネージャーのポートをみて番号を確認して下さい。例えば以下の図の場合だと**COM4**であるということになります。<br>![ポート番号](images/portnum.jpg)
-5. 「Priset」のポップアップメニューでM5StackまたはOdroid-GO用の「**SD-Menu**」の最新版を選択します。
+5. 「Priset」のポップアップメニューで「**LovyanLauncher......**」を選択します。
 6. 「**Start**」ボタンをクリックすると、プログラムの転送が開始します。
-7. プログラムの転送が終わるとM5Stackがリセットされ、インストールした**SD-Menu**が起動します。
-8. M5StackのCボタン（右）を何回か押して、RSTesterを選択し、Bボタン（中央）のボタンを押すと、RSTesterが起動します。操作方法は後で説明します。
-9. microSDにmenu.binが入ってない場合は、M5Burner_Micのfirmwaresフォルダの中のtobozoフォルダの中にM5StackまたはOdroid-GOのフォルダがありその中に**menu.bin**があるので、それをmicroSDにコピーして下さい。
-9. 再度、メニューを表示する場合は、Aボタン（左）を押しながらリセットボタン（左上側面）を押すとSD-Menuが起動します。
+7. プログラムの転送が終わるとM5StackまたはOdroid-GOは、リセットされ、インストールした**LovyanLauncher**が起動します。
+
+#### LovyanLauncherの操作
+	1. メニューの**SD-Updater**を選択して"OK"
+	2. microSDに入ってるプログラムの一覧が表示されます。
+	3. 目的のプログラムを探して選択し、"OK"
+	4. 起動する場合は、"Execute"
+
+#### ODROID-GO Device Firmware Menu Controlsの操作
+
+	1. 電源スイッチ OFF
+	2. Bボタンを押したまま, 電源スイッチ On
+	3. メニューが表示されたらBボタンを離す
+
+	アプリケーションF/Wの起動
+	- A ボタン: アプリケーションF/Wを選択
+	- B ボタン: キャンセル
+	- Start ボタン: アプリケーションF/Wの書き込み
+
 
 ## 接続
 M5Stackとサーボをジャンパーワイヤなどでつなぎます。
