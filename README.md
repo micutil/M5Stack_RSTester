@@ -1,4 +1,4 @@
-# RSTester (v1.2)
+# RSTester (v1.0.3)
 RSTesterは、双葉電子工業さんのRS304系のサーボの動作テスト、ID変更および、各種設定の表示や変更を行う為の、M5Stackのプログラムおよび、RS304系のサーボを接続するためのアダプターです。
 
 [LovyanLauncher](https://github.com/lovyan03/M5Stack_LovyanLauncher)に対応していて、microSDからの起動には[LovyanLauncher](https://github.com/lovyan03/M5Stack_LovyanLauncher)もインストールされている必要があります。
@@ -9,9 +9,10 @@ RSTesterは、双葉電子工業さんのRS304系のサーボの動作テスト�
 [![preview](images/preview01s.jpg)](https://www.youtube.com/watch?v=g7JMcP97mWo)
 
 ## 更新
-- スリープ対応 (v1.2)
-- M5StackのFacesに対応しました (v1.1)
-- Odroid-GOに対応しました (v1.1)
+- １年近く前（2019/11/04）に修正していたんですが公開していなかった不具合で、v1.0.2で、IDを変更できない不具合を含んでしまったため、その修正版です。(v1.0.3)
+- スリープ対応 (v1.0.2)
+- M5StackのFacesに対応しました (v1.0.1)
+- Odroid-GOに対応しました (v1.0.1)
 
 #### Odroid-GO 用のプログラムをビルドをしたい場合
 
@@ -25,7 +26,7 @@ RSTesterは、双葉電子工業さんのRS304系のサーボの動作テスト�
 ### ① M5Stack / Odroid-GO のmicroSDに入れるもの
 Odroid-GOメニューを使う場合（初期状態の場合）は[Skeleton file](https://wiki.odroid.com/odroid_go/make_sd_card)を作成しておきます。
 
-1. 同梱のファイルの中にmicroSDフォルダの中のファイルを、microSDにコピーします。RSTester.binやRSTester.fwというファイルがプログラムになります。**コピー先のmicroSDの中に既にあるフォルダの中のファイルを消してしまわないように結合コピーを選ぶようにして下さい。**
+1. 同梱のファイルの中のmicroSDフォルダの中のファイルを、microSDにコピーします。RSTester.binやRSTester.fwというファイルがプログラムになります。**コピー先のmicroSDの中に既にあるフォルダの中のファイルを消してしまわないように結合コピーを選ぶようにして下さい。**
 2. 次に、RSTesterが使っている**フォント**（**FONT.BIN**, **FONTLCD.BIN**)が必要になります。これらのファイツをまだ入れてない場合は、ブラウザで、[Tamakichi/Arduino-KanjiFont-Library-SD](https://git.io/fjYst)を開いて下さい。
 3. 「**Clone or download**」でD**ownload ZIP**を選び、ダウンロードし、zipを解凍します。
 4. そのファイルの中に、fontbinフォルダがあり、中に、**FONT.BIN**, **FONTLCD.BIN**というファイルがあるので、これら２つのファイルをmicroSDにコピーします。
@@ -121,7 +122,7 @@ Odroid-GOとサーボをジャンパーワイヤなどでつなぎます。
 		黒	…	BASIC,GRAY				RS303SR,RS304MD, ロボゼロ, ロビ１、ロビ２
 		赤	…	BASIC,GRAY,FIRE,M5GO	ロビ１、ロビ２
 
-<IMG SRC=images/m5sadptr.jpg height ="380"><IMG SRC=images/odroidconnect.jpg height="380">
+<IMG SRC=images/m5sadptr.jpg height ="380"><IMG SRC=images/odroidgoadopter.jpg height="380">
 
 Odroid-GOとM5Stack用RSTesterアダプタとつなぐ時。
 
@@ -224,9 +225,10 @@ Odroid-GOとM5Stack用RSTesterアダプタとつなぐ時。
 9. パンチの設定変更が最後なので、6の操作に相当するところで、Bボタンでなく、Cボタンを押すことにより、変更して、保存（ROMに書き込んで）する操作を行って下さい。もしBボタンで、一覧に戻った場合は、一覧の右下の「保存して戻る」を選んでトップ画面に戻って下さい。
 
 ## 履歴
-	ver 1.2: 2019/ 5/17 スリープ対応ほか
-	ver 1.1: 2019/ 5/12 ODROID-GO対応/FACES対応
-	ver 1.0: 2019/ 4/ 7
+	ver 1.0.3: 2019/11/04 IDを変更できない不具合を修正
+	ver 1.0.2: 2019/ 5/17 スリープ対応ほか
+	ver 1.0.1: 2019/ 5/12 ODROID-GO対応/FACES対応
+	ver 1.0.0: 2019/ 4/ 7
 
 ## ライセンス
 CC 4.0 BY-NC-ND https://github.com/micutil/M5Stack_RSTester

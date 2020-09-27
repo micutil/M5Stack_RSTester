@@ -1,6 +1,7 @@
 /*************************************************
  * M5Stack RSTester
  * 
+ * ver 1.0.3 (2019/11/04) IDを変更できない不具合を修正
  * ver 1.0.2 (2019/05/17) Deep Sleep 対応 / M5Stack 0.27, ESP32 1.02でビルド
  * ver 1.0.1 (2019/05/12) ODROID-GO対応/FACES対応
  * ver 1.0.0 (2019/04/07)
@@ -459,7 +460,7 @@ void drawTitleName() {
   SDfonts.open(); // フォントのオープン
   fontDump(20, 5, "RSTester", 24, TFT_YELLOW, false);
   fontDump(20, 30, "RS30x系サーボ設定表示・変更", 16, TFT_WHITE, false);
-  fontDump(20, 47, "by Micono v1.0.1", 12, TFT_GREEN, false); 
+  fontDump(20, 47, "by Micono v1.0.3", 12, TFT_GREEN, false);
   SDfonts.close(); // フォントのクローズ
   
 }
@@ -604,7 +605,7 @@ void doChangeServoID() {
   changeServoID(id,changeToID);
   drawChangeInfo(s,TFT_GREEN);
 
-  doWriteReset(id);
+  doWriteReset(changeToID);//20191104 change id to changeToID
 }
 
 void doWriteResetOnly() {
@@ -698,7 +699,7 @@ void setup() {
   #ifdef ARDUINO_ODROID_ESP32
   //#1 GND
   //14 IO12 EXT-Pin #3 : EMAC_TXD3
-  //23 IO15 EXT-Pin #4                            : EMAC_RXD3
+  //23 IO15 EXT-Pin #4 : EMAC_RXD3
   //#10 POWER
   Serial2.begin(115200, SERIAL_8N1, 15, 12);
   #else
